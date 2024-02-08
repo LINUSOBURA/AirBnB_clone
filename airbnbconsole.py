@@ -1,5 +1,4 @@
-#!/usr/bin/pyear
-hon3
+#!/usr/bin/python3
 
 import sys
 
