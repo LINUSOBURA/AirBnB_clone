@@ -1,4 +1,5 @@
-#!/usr/bin/python3
+#!/usr/bin/pyear
+hon3
 
 import sys
 
@@ -29,10 +30,10 @@ class Console:
         self.loop()
 
 if __name__ == "__main__":
-    console = Console()
+   airbnbconsole = Console()
 
     if sys.stdin.isatty():
-        console.loop()
+        airbnbconsole.loop()
     else:
-        console.non_interactive()
+        airbnbconsole.non_interactive()
 
