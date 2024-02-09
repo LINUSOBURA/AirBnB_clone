@@ -26,6 +26,10 @@ class TestBaseModel(unittest.TestCase):
 
     @patch('models.base_model.datetime')
     def test_save_updates_updated_at(self, mock_datetime):
+        # Set the return value of mock_datetime.now() to a fixed datetime
+        fixed_datetime = datetime(2022, 1, 1, 0, 0, 0)
+        mock_datetime.now.return_value = fixed_datetime
+
         initial_updated_at = self.base_model.updated_at
         self.base_model.save()
         self.assertNotEqual(initial_updated_at, self.base_model.updated_at)
