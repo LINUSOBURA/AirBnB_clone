@@ -36,7 +36,9 @@ class BaseModel:
         '''Method to generate a dictionary representation of the instance BaseModel'''
         class_name = self.__class__.__name__
         attributes = vars(self)
-        instace_dict = {**attributes, '__class__': class_name}
+        instance_dict = attributes.copy()
+        instance_dict['__class__'] = class_name
+
         instace_dict['created_at'] = datetime.isoformat(self.created_at)
         instace_dict['updated_at'] = datetime.isoformat(self.updated_at)
         return instace_dict
