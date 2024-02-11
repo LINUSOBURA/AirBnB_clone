@@ -1,3 +1,5 @@
+t add .
+git commit -m "Save changes"
 #!/usr/bin/python3
 
 import unittest
