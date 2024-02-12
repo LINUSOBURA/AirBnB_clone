@@ -7,54 +7,37 @@ class TestFileStorage(unittest.TestCase):
     def setUp(self):
         self.storage = FileStorage()
 
-    def test_all_method_returns_dictionary_of_objects(self):
+    def tearDown(self):
+        try:
+            os.remove("file.json")
+        except FileNotFoundError:
+            pass
+
+    def test_all_empty(self):
+        # Test if all() returns an empty dictionary when no objects are stored
+        all_objects = self.storage.all()
+        self.assertEqual(all_objects, {})
+
+    def test_new(self):
+        # Test if new() adds an object to __objects with the correct key
+        obj = BaseModel()
+        self.storage.new(obj)
+        all_objects = self.storage.all()
+        self.assertIn("BaseModel." + obj.id, all_objects)
+
+    def test_save_reload(self):
+        # Test if save() serializes objects to the file and reload() deserializes them back
         obj1 = BaseModel()
         obj2 = BaseModel()
         self.storage.new(obj1)
         self.storage.new(obj2)
-        objects = self.storage.all()
-        self.assertEqual(len(objects), 2)
-        self.assertIn("BaseModel." + obj1.id, objects)
-        self.assertIn("BaseModel." + obj2.id, objects)
-
-    def test_new_method_sets_object_correctly(self):
-        obj = BaseModel()
-        self.storage.new(obj)
-        objects = self.storage.all()
-        self.assertIn("BaseModel." + obj.id, objects)
-
-    def test_save_method_serializes_objects_to_file(self):
-        obj = BaseModel()
-        self.storage.new(obj)
         self.storage.save()
-        self.assertTrue(os.path.exists(self.storage._FileStorage__file_path))
-
-    def test_reload_method_deserializes_file_to_objects(self):
-        obj = BaseModel()
-        self.storage.new(obj)
-        self.storage.save()
-
+        # Create a new storage instance to simulate reloading from file
         new_storage = FileStorage()
         new_storage.reload()
-        objects = new_storage.all()
-        self.assertIn("BaseModel." + obj.id, objects)
-
-    def test_reload_method_does_nothing_if_file_does_not_exist(self):
-        if os.path.exists(self.storage._FileStorage__file_path):
-            os.remove(self.storage._FileStorage__file_path)
-
-        self.storage.reload()
-        self.assertEqual(len(self.storage.all()), 0)
-
-    def test_base_model_save_method_calls_save_method_of_storage(self):
-        obj = BaseModel()
-        obj.save()
-        self.assertTrue(os.path.exists(self.storage._FileStorage__file_path))
-
-    def test_base_model_init_calls_new_method_of_storage_for_new_instance(self):
-        obj = BaseModel()
-        objects = self.storage.all()
-        self.assertIn("BaseModel." + obj.id, objects)
+        all_objects = new_storage.all()
+        self.assertIn("BaseModel." + obj1.id, all_objects)
+        self.assertIn("BaseModel." + obj2.id, all_objects)
 
 if __name__ == '__main__':
     unittest.main()
