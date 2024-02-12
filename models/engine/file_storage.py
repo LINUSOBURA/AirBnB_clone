@@ -2,6 +2,7 @@
 """File Storage Module"""
 import json
 import os
+from models.base_model import BaseModel
 
 
 class FileStorage():
@@ -10,6 +11,7 @@ class FileStorage():
         self.__file_path = "file.json"
 
     def all(self):
+        """ All Objects """
         return self.__objects
 
     def new(self, obj):
@@ -17,23 +19,20 @@ class FileStorage():
         self.__objects[key] = obj
 
     def save(self):
-        abs_file_path = os.path.abspath(self.__file_path)
-        with open(abs_file_path, 'a') as f:
-            serializable_objects = {}
-            for key, obj in self.__objects.items():
-                if hasattr(obj, 'to_dict'):
-                    serializable_objects[key] = obj.to_dict()
-            json.dump(serializable_objects, f)
-            f.write('\n')
+        with open(self.__file_path, "w") as f:
+            obj_dict = {key: value.to_dict() for key, value in self.__objects.items()}
+            json.dump(obj_dict, f, indent=4, sort_keys=True, default=str)
 
     def reload(self):
-        abs_file_path = os.path.abspath(self.__file_path)
-        if os.path.exists(self.__file_path):
-            with open(abs_file_path, 'r') as f:
-                self.__objects = {}
-                for line in f:
-                    obj = json.loads(line)
-                    key = list(obj.keys())[0]
-                    self.__objects[key] = obj[key]
-        else:
-            pass
+        all_classes = {
+            "BaseModel": BaseModel
+        }
+
+        if os.path.isfile(self.__file_path):
+            with open(self.__file_path, "r") as f:
+                obj_dict = json.load(f)
+                for key, value in obj_dict.items():
+                    name = key.split('.')[0]
+                    if name in all_classes:
+                        obj = all_classes[name](**value)
+                        self.__objects[key] = obj

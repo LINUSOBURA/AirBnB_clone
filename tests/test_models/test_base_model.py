@@ -1,51 +1,76 @@
 #!/usr/bin/python3
+""" Contains unit tests for class BaseModel """
 
+
+import io
+import sys
 import unittest
 from datetime import datetime
-from unittest.mock import patch
+
+import models
 from models.base_model import BaseModel
 
 
 class TestBaseModel(unittest.TestCase):
+    """test for class BaseModel and its methods"""
 
     def setUp(self):
-        self.base_model = BaseModel()
+        """Set up method"""
+        self.base1 = BaseModel()
+        self.base2 = BaseModel()
 
-    def test_id_is_string(self):
-        self.assertIsInstance(self.base_model.id, str)
+    def tearDown(self):
+        """Tear down method"""
+        pass
 
-    def test_created_at_is_datetime(self):
-        self.assertIsInstance(self.base_model.created_at, datetime)
+    def test_docstring(self):
+        """test doc in the file"""
+        self.assertIsNotNone(BaseModel.__doc__)
+        self.assertIsNotNone(BaseModel.__init__.__doc__)
+        self.assertIsNotNone(BaseModel.save.__doc__)
 
-    def test_updated_at_is_datetime(self):
-        self.assertIsInstance(self.base_model.updated_at, datetime)
+    def test_uuid(self):
+        """Test for uuid"""
+        self.assertNotEqual(self.base1.id, self.base2.id)
+        self.assertTrue(hasattr(self.base1, "id"))
+        self.assertEqual(type(self.base1.id), str)
+        self.assertEqual(type(self.base2.id), str)
 
-    def test_str_representation(self):
-        expected_str = f"[BaseModel] ({self.base_model.id}) {self.base_model.__dict__}"
-        self.assertEqual(str(self.base_model), expected_str)
+    def test_instance(self):
+        """Test for instance"""
+        self.assertTrue(isinstance(self.base1, BaseModel))
+        self.assertTrue(isinstance(self.base2, BaseModel))
 
-    @patch('models.base_model.datetime')
-    def test_save_updates_updated_at(self, mock_datetime):
-        # Set the return value of mock_datetime.now() to a fixed datetime
-        fixed_datetime = datetime(2022, 1, 1, 0, 0, 0)
-        mock_datetime.now.return_value = fixed_datetime
+    def test_type(self):
+        """Test for type of object"""
+        self.assertEqual(type(self.base1), BaseModel)
+        self.assertEqual(type(self.base2), BaseModel)
 
-        initial_updated_at = self.base_model.updated_at
-        self.base_model.save()
-        self.assertNotEqual(initial_updated_at, self.base_model.updated_at)
+    def test_save(self):
+        """Test for save"""
+        time = self.base1.updated_at
+        self.base1.save()
+        self.assertFalse(time == self.base1.updated_at)
 
-    def test_to_dict_contains_class_name(self):
-        model_dict = self.base_model.to_dict()
-        self.assertIn('__class__', model_dict)
-        self.assertEqual(model_dict['__class__'], 'BaseModel')
+    def test_update(self):
+        """Test for update"""
+        self.base1.name = "Holberton"
+        self.assertTrue(hasattr(self.base1, "name"))
 
-    def test_to_dict_contains_created_at_and_updated_at_as_isoformat(self):
-        model_dict = self.base_model.to_dict()
-        self.assertIn('created_at', model_dict)
-        self.assertIn('updated_at', model_dict)
-        self.assertEqual(model_dict['created_at'], self.base_model.created_at.isoformat())
-        self.assertEqual(model_dict['updated_at'], self.base_model.updated_at.isoformat())
+    def test_init_with_kwargs(self):
+        """Test to init for kwargs"""
+        self.base1.name = "Holberton"
+        model_json = self.base1.to_dict()
+        new_model = BaseModel(**model_json)
+        self.assertDictEqual(model_json, new_model.to_dict())
+        self.assertIn("name", new_model.to_dict())
+        self.assertIsNot(self.base1, new_model)
+
+    def test_storage(self):
+        """Test to staorage"""
+        obj_dict = models.storage.all()
+        self.assertTrue(obj_dict)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
