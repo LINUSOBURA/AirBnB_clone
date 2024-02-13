@@ -15,6 +15,7 @@ class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
     __classes = {
         "BaseModel": BaseModel,
+<<<<<<< HEAD
         "User": User,
         "State" : State,
         "City" : City,
@@ -22,6 +23,10 @@ class HBNBCommand(cmd.Cmd):
         "Place" : Place,
         "Review" : Review
     }
+=======
+        "User": User
+        }
+>>>>>>> 08f92ec37de47bc04be60e2bf17630f6fa754b25
 
     def emptyline(self):
         pass
