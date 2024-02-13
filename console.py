@@ -4,13 +4,14 @@ import cmd
 from models.__init__ import storage
 from models.base_model import BaseModel
 import sys
-
+from models.user import User
 
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
     __classes = {
-        "BaseModel": BaseModel
-    }
+        "BaseModel": BaseModel,
+        "User": User
+        }
 
     def emptyline(self):
         pass
