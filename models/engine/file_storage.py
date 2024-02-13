@@ -5,6 +5,11 @@ import os
 
 from models.base_model import BaseModel
 from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class FileStorage:
@@ -26,7 +31,15 @@ class FileStorage:
             json.dump(obj_dict, f, indent=4, sort_keys=True, default=str)
 
     def reload(self):
-        all_classes = {"BaseModel": BaseModel, "User": User}
+        all_classes = {
+            "BaseModel": BaseModel,
+            "User": User,
+            "State": State,
+            "City": City,
+            "Amenity": Amenity,
+            "Place": Place,
+            "Review": Review
+        }
 
         if os.path.isfile(self.__file_path):
             with open(self.__file_path, "r") as f:

@@ -7,11 +7,15 @@ import sys
 from models.__init__ import storage
 from models.base_model import BaseModel
 from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
-    __classes = {"BaseModel": BaseModel, "User": User}
 
     def precmd(self, line):
         print(line)
@@ -24,6 +28,16 @@ class HBNBCommand(cmd.Cmd):
             return cmd.Cmd.precmd(self, parse)
         else:
             return cmd.Cmd.precmd(self, line)
+
+    __classes = {
+        "BaseModel": BaseModel,
+        "User": User,
+        "State" : State,
+        "City" : City,
+        "Amenity" : Amenity,
+        "Place" : Place,
+        "Review" : Review
+    }
 
     def emptyline(self):
         pass
