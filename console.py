@@ -1,27 +1,39 @@
 #!/usr/bin/python3
 """Console Module"""
 import cmd
+import re
+import sys
+
 from models.__init__ import storage
 from models.base_model import BaseModel
-import sys
 from models.user import User
+
 
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
-    __classes = {
-        "BaseModel": BaseModel,
-        "User": User
-        }
+    __classes = {"BaseModel": BaseModel, "User": User}
+
+    def precmd(self, line):
+        print(line)
+        if "." in line:
+            parse = re.findall(r"[a-zA-Z]+", line)
+            if len(parse) >= 2:
+                parse = parse[1] + " " + parse[0]
+                print(parse)
+
+            return cmd.Cmd.precmd(self, parse)
+        else:
+            return cmd.Cmd.precmd(self, line)
 
     def emptyline(self):
         pass
 
     def do_EOF(self, line):
-        '''End program with ctrl D'''
+        """End program with ctrl D"""
         return True
 
     def do_quit(self, line):
-        '''quit to end program'''
+        """quit to end program"""
         return True
 
     def default(self, line):
@@ -81,7 +93,7 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_all(self, line):
-        '''Prints all string representation of all instance'''
+        """Prints all string representation of all instance"""
         args = line.split()
         objs = [storage.all()]
 
@@ -96,7 +108,7 @@ class HBNBCommand(cmd.Cmd):
             print(objs)
 
     def do_update(self, line):
-        '''Updates an instance based on the class name and id'''
+        """Updates an instance based on the class name and id"""
         args = line.split()
         if len(args) == 0:
             print("** class name missing **")
@@ -123,5 +135,5 @@ class HBNBCommand(cmd.Cmd):
         storage.save()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     HBNBCommand().cmdloop()

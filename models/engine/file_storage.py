@@ -6,6 +6,7 @@ import os
 from models.base_model import BaseModel
 from models.user import User
 
+
 class FileStorage:
     def __init__(self):
         self.__objects = {}
@@ -25,7 +26,7 @@ class FileStorage:
             json.dump(obj_dict, f, indent=4, sort_keys=True, default=str)
 
     def reload(self):
-        all_classes = {"BaseModel": BaseModel}
+        all_classes = {"BaseModel": BaseModel, "User": User}
 
         if os.path.isfile(self.__file_path):
             with open(self.__file_path, "r") as f:
