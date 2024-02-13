@@ -2,16 +2,17 @@
 """File Storage Module"""
 import json
 import os
+
 from models.base_model import BaseModel
 
 
-class FileStorage():
+class FileStorage:
     def __init__(self):
         self.__objects = {}
         self.__file_path = "file.json"
 
     def all(self):
-        """ All Objects """
+        """All Objects"""
         return self.__objects
 
     def new(self, obj):
@@ -24,15 +25,13 @@ class FileStorage():
             json.dump(obj_dict, f, indent=4, sort_keys=True, default=str)
 
     def reload(self):
-        all_classes = {
-            "BaseModel": BaseModel
-        }
+        all_classes = {"BaseModel": BaseModel}
 
         if os.path.isfile(self.__file_path):
             with open(self.__file_path, "r") as f:
                 obj_dict = json.load(f)
                 for key, value in obj_dict.items():
-                    name = key.split('.')[0]
+                    name = key.split(".")[0]
                     if name in all_classes:
                         obj = all_classes[name](**value)
                         self.__objects[key] = obj
