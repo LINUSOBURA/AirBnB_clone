@@ -9,9 +9,9 @@ from models.user import User
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
     __classes = {
-        "BaseModel": BaseModel
+        "BaseModel": BaseModel,
         "User": User
-    }
+        }
 
     def emptyline(self):
         pass
