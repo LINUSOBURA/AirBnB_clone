@@ -5,25 +5,23 @@ import re
 import sys
 
 from models.__init__ import storage
-from models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
 from models.amenity import Amenity
+from models.base_model import BaseModel
+from models.city import City
 from models.place import Place
 from models.review import Review
+from models.state import State
+from models.user import User
 
 
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
 
     def precmd(self, line):
-        print(line)
         if "." in line:
             parse = re.findall(r"[a-zA-Z]+", line)
             if len(parse) >= 2:
                 parse = parse[1] + " " + parse[0]
-                print(parse)
 
             return cmd.Cmd.precmd(self, parse)
         else:
@@ -32,11 +30,11 @@ class HBNBCommand(cmd.Cmd):
     __classes = {
         "BaseModel": BaseModel,
         "User": User,
-        "State" : State,
-        "City" : City,
-        "Amenity" : Amenity,
-        "Place" : Place,
-        "Review" : Review
+        "State": State,
+        "City": City,
+        "Amenity": Amenity,
+        "Place": Place,
+        "Review": Review,
     }
 
     def emptyline(self):
@@ -109,7 +107,7 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, line):
         """Prints all string representation of all instance"""
         args = line.split()
-        objs = [storage.all()]
+        objs = []
 
         if len(args) > 0 and args[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
